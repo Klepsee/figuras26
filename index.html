@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Figuras26 - Álbum Virtual</title>
+    <style>
+        :root {
+            --primary-color: #004d99; 
+            --bg-color: #f0f2f5;
+            --card-bg: #ffffff;
+            --missing-color: #e4e6eb;
+            --group-color: #002b5e;
+            --progress-color: #28a745;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            margin: 0;
+            padding: 15px;
+            color: #333;
+        }
+        header {
+            text-align: center;
+            background-color: var(--primary-color);
+            color: white;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+        h1 { margin: 0; font-size: 28px; }
+
+        /* Barra de Progresso e Estatísticas */
+        .stats-container {
+            background: white;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+        .stats-numbers {
+            display: flex;
+            justify-content: space-between;
+            font-size: 16px;
+            margin-bottom: 10px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        .progress-bar-bg {
+            background-color: #e0e0e0;
+            height: 20px;
+            border-radius: 10px;
+            overflow: hidden;
+            position: relative;
+        }
+        .progress-bar-fill {
+            background-color: var(--progress-color);
+            height: 100%;
+            width: 0%;
+            transition: width 0.5s ease-in-out;
+        }
+
+        /* Estilos das Abas */
+        .tabs {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+        }
+        .tab-btn {
+            background-color: #ddd;
+            color: #333;
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-size: 14px;
+            border: none;
+            cursor: pointer;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .tab-btn.active { background-color: var(--primary-color); color: white; }
+
+        /* Barra de Navegação Rápida */
+        .quick-nav {
+            display: flex;
+            overflow-x: auto;
+            gap: 10px;
+            padding: 10px;
+            background: white;
+            border-radius: 10px;
+            margin-bottom: 25px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            white-space: nowrap;
+            scrollbar-width: thin;
+            scrollbar-color: var(--primary-color) #f0f2f5;
+        }
+        .quick-nav::-webkit-scrollbar { height: 6px; }
+        .quick-nav::-webkit-scrollbar-thumb { background: var(--primary-color); border-radius: 3px; }
+        
+        .nav-btn {
+            background: #e9ecef;
+            border: 1px solid #ced4da;
+            padding: 6px 12px;
+            border-radius: 15px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 13px;
+            color: var(--primary-color);
+            flex-shrink: 0;
+            transition: 0.2s;
+        }
+        .nav-btn:hover { background: var(--primary-color); color: white; }
+
+        /* Estilos das Seleções e Cartas */
+        .team-section {
+            margin-bottom: 30px;
+            background: #fff;
+            padding: 15px;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            border-left: 5px solid var(--group-color);
+            scroll-margin-top: 100px;
+        }
+        .team-title {
+            margin-top: 0; margin-bottom: 15px;
+            padding-bottom: 10px; border-bottom: 2px solid #eee;
+            color: var(--group-color); font-size: 18px;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+            gap: 10px;
+        }
+        .card {
+            background-color: var(--card-bg);
+            border-radius: 8px;
+            padding: 15px 5px;
+            text-align: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            position: relative;
+            border: 2px solid transparent;
+            display: flex; flex-direction: column; align-items: center;
+        }
+        .card.missing { background-color: var(--missing-color); opacity: 0.6; }
+        .card.duplicate { border: 2px solid #ffcc00; background-color: #fffdf0; }
+        
+        .card-code { font-size: 16px; font-weight: 900; margin-bottom: 10px; color: #111; }
+        .controls { display: flex; justify-content: center; align-items: center; gap: 8px; }
+        
+        button.btn-small {
+            background-color: #ffcc00; border: none; font-weight: bold;
+            border-radius: 5px; cursor: pointer; padding: 4px 10px; font-size: 16px;
+        }
+        
+        .badge {
+            position: absolute; top: -8px; right: -8px;
+            background-color: #ff4444; color: white; border-radius: 50%;
+            width: 24px; height: 24px; display: flex; align-items: center; justify-content: center;
+            font-size: 12px; font-weight: bold; box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+        .empty-message { text-align: center; color: #666; font-size: 16px; padding: 20px; }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>🏆 Figuras26</h1>
+    </header>
+
+    <div class="stats-container">
+        <div class="stats-numbers">
+            <div><strong>Álbum:</strong> <span id="total-collected">0</span> / <span id="total-cards">0</span></div>
+            <div><strong>Repetidas:</strong> <span id="total-duplicates">0</span></div>
+            <div><strong>Concluído:</strong> <span id="percentage-text">0%</span></div>
+        </div>
+        <div class="progress-bar-bg">
+            <div class="progress-bar-fill" id="progress-fill"></div>
+        </div>
+    </div>
+
+    <div class="tabs">
+        <button id="tab-todas" class="tab-btn active" onclick="mudarAba('todas')">Todas as Cartas</button>
+        <button id="tab-faltantes" class="tab-btn" onclick="mudarAba('faltantes')">Faltantes</button>
+        <button id="tab-repetidas" class="tab-btn" onclick="mudarAba('repetidas')">Repetidas</button>
+    </div>
+
+    <div class="quick-nav" id="quick-nav">
+        </div>
+
+    <div id="album-container">
+        </div>
+
+    <script>
+        const selecoesCopa2026 = [
+            { nome: "Grupo A - México 🇲🇽", sigla: "MEX" }, { nome: "Grupo A - África do Sul 🇿🇦", sigla: "RSA" }, { nome: "Grupo A - Coreia do Sul 🇰🇷", sigla: "KOR" }, { nome: "Grupo A - República Tcheca 🇨🇿", sigla: "CZE" },
+            { nome: "Grupo B - Canadá 🇨🇦", sigla: "CAN" }, { nome: "Grupo B - Bósnia 🇧🇦", sigla: "BIH" }, { nome: "Grupo B - Catar 🇶🇦", sigla: "QAT" }, { nome: "Grupo B - Suíça 🇨🇭", sigla: "SUI" },
+            { nome: "Grupo C - Brasil 🇧🇷", sigla: "BRA" }, { nome: "Grupo C - Marrocos 🇲🇦", sigla: "MAR" }, { nome: "Grupo C - Haiti 🇭🇹", sigla: "HAI" }, { nome: "Grupo C - Escócia 🏴󠁧󠁢󠁳󠁣󠁴󠁿", sigla: "SCO" },
+            { nome: "Grupo D - Estados Unidos 🇺🇸", sigla: "USA" }, { nome: "Grupo D - Paraguai 🇵🇾", sigla: "PAR" }, { nome: "Grupo D - Austrália 🇦🇺", sigla: "AUS" }, { nome: "Grupo D - Turquia 🇹🇷", sigla: "TUR" },
+            { nome: "Grupo E - Alemanha 🇩🇪", sigla: "GER" }, { nome: "Grupo E - Curaçao 🇨🇼", sigla: "CUW" }, { nome: "Grupo E - Costa do Marfim 🇨🇮", sigla: "CIV" }, { nome: "Grupo E - Equador 🇪🇨", sigla: "ECU" },
+            { nome: "Grupo F - Holanda 🇳🇱", sigla: "NED" }, { nome: "Grupo F - Japão 🇯🇵", sigla: "JPN" }, { nome: "Grupo F - Suécia 🇸🇪", sigla: "SWE" }, { nome: "Grupo F - Tunísia 🇹🇳", sigla: "TUN" },
+            { nome: "Grupo G - Bélgica 🇧🇪", sigla: "BEL" }, { nome: "Grupo G - Egito 🇪🇬", sigla: "EGY" }, { nome: "Grupo G - Irã 🇮🇷", sigla: "IRN" }, { nome: "Grupo G - Nova Zelândia 🇳🇿", sigla: "NZL" },
+            { nome: "Grupo H - Espanha 🇪🇸", sigla: "ESP" }, { nome: "Grupo H - Cabo Verde 🇨🇻", sigla: "CPV" }, { nome: "Grupo H - Arábia Saudita 🇸🇦", sigla: "KSA" }, { nome: "Grupo H - Uruguai 🇺🇾", sigla: "URU" },
+            { nome: "Grupo I - França 🇫🇷", sigla: "FRA" }, { nome: "Grupo I - Senegal 🇸🇳", sigla: "SEN" }, { nome: "Grupo I - Iraque 🇮🇶", sigla: "IRQ" }, { nome: "Grupo I - Noruega 🇳🇴", sigla: "NOR" },
+            { nome: "Grupo J - Argentina 🇦🇷", sigla: "ARG" }, { nome: "Grupo J - Argélia 🇩🇿", sigla: "ALG" }, { nome: "Grupo J - Áustria 🇦🇹", sigla: "AUT" }, { nome: "Grupo J - Jordânia 🇯🇴", sigla: "JOR" },
+            { nome: "Grupo K - Portugal 🇵🇹", sigla: "POR" }, { nome: "Grupo K - RD Congo 🇨🇩", sigla: "COD" }, { nome: "Grupo K - Uzbequistão 🇺🇿", sigla: "UZB" }, { nome: "Grupo K - Colômbia 🇨🇴", sigla: "COL" },
+            { nome: "Grupo L - Inglaterra 🏴󠁧󠁢󠁥󠁮󠁧󠁿", sigla: "ENG" }, { nome: "Grupo L - Croácia 🇭🇷", sigla: "CRO" }, { nome: "Grupo L - Gana 🇬🇭", sigla: "GHA" }, { nome: "Grupo L - Panamá 🇵🇦", sigla: "PAN" }
+        ];
+
+        let cartasGeradas = [];
+
+        // Especiais (FWC) agora de 00 a 19
+        for(let i = 0; i <= 19; i++) {
+            let num = i < 10 ? `0${i}` : i;
+            cartasGeradas.push({ codigo: `FWC-${num}`, selecao: "Especiais 🌟", quantidade: 0 });
+        }
+
+        // Resto das seleções (00 a 20)
+        selecoesCopa2026.forEach((selecao) => {
+            for(let i = 0; i <= 20; i++) {
+                let numero = i < 10 ? `0${i}` : i; 
+                cartasGeradas.push({ codigo: `${selecao.sigla}-${numero}`, selecao: selecao.nome, quantidade: 0 });
+            }
+        });
+
+        // Coca-Cola (C-01 a C-14) no final do álbum
+        for(let i = 1; i <= 14; i++) {
+            let num = i < 10 ? `0${i}` : i;
+            cartasGeradas.push({ codigo: `C-${num}`, selecao: "Coca-Cola 🥤", quantidade: 0 });
+        }
+
+        // Carrega do LocalStorage
+        let cartasSalvas = JSON.parse(localStorage.getItem('figuras26_save')) || [];
+        let dicionarioSalvas = {};
+        cartasSalvas.forEach(carta => { dicionarioSalvas[carta.codigo] = carta.quantidade; });
+
+        let cartas = cartasGeradas.map(carta => {
+            if (dicionarioSalvas[carta.codigo] !== undefined) { carta.quantidade = dicionarioSalvas[carta.codigo]; }
+            return carta;
+        });
+
+        let abaAtual = 'todas'; 
+
+        // Função que gera os botões de atalho
+        function iniciarNavegacao() {
+            const navContainer = document.getElementById('quick-nav');
+            navContainer.innerHTML = ''; 
+
+            // Botão FWC
+            let btnFWC = document.createElement('button');
+            btnFWC.className = 'nav-btn';
+            btnFWC.innerText = '🌟 FWC';
+            btnFWC.onclick = () => rolarParaSelecao('Especiais 🌟');
+            navContainer.appendChild(btnFWC);
+
+            // Botões das Seleções
+            selecoesCopa2026.forEach(s => {
+                let btn = document.createElement('button');
+                btn.className = 'nav-btn';
+                btn.innerText = s.sigla; 
+                btn.onclick = () => rolarParaSelecao(s.nome);
+                navContainer.appendChild(btn);
+            });
+
+            // Botão Coca-Cola
+            let btnCoca = document.createElement('button');
+            btnCoca.className = 'nav-btn';
+            btnCoca.innerText = '🥤 COCA';
+            btnCoca.onclick = () => rolarParaSelecao('Coca-Cola 🥤');
+            navContainer.appendChild(btnCoca);
+        }
+
+        // Função do "elevador"
+        function rolarParaSelecao(nomeDaSelecao) {
+            if(abaAtual !== 'todas') {
+                mudarAba('todas');
+            }
+
+            setTimeout(() => {
+                const titulos = document.querySelectorAll('.team-title');
+                for(let titulo of titulos) {
+                    if(titulo.innerText === nomeDaSelecao) {
+                        const yOffset = -90; 
+                        const elementPosition = titulo.getBoundingClientRect().top;
+                        const offsetPosition = elementPosition + window.pageYOffset + yOffset;
+  
+                        window.scrollTo({
+                            top: offsetPosition,
+                            behavior: "smooth"
+                        });
+                        break;
+                    }
+                }
+            }, 50);
+        }
+
+        function mudarAba(aba) {
+            abaAtual = aba;
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            document.getElementById(`tab-${aba}`).classList.add('active');
+            renderizar();
+        }
+
+        function renderizar() {
+            const container = document.getElementById('album-container');
+            container.innerHTML = ''; 
+
+            let totalColetado = 0;
+            let totalRepetidas = 0;
+            
+            cartas.forEach(carta => {
+                if (carta.quantidade > 0) totalColetado++;
+                if (carta.quantidade > 1) totalRepetidas += (carta.quantidade - 1);
+            });
+
+            // Atualiza barra de progresso
+            let porcentagem = ((totalColetado / cartas.length) * 100).toFixed(1);
+            document.getElementById('percentage-text').innerText = porcentagem + '%';
+            document.getElementById('progress-fill').style.width = porcentagem + '%';
+
+            let cartasExibidas = cartas.map((carta, index) => ({ ...carta, indexOriginal: index }));
+            
+            if (abaAtual === 'faltantes') {
+                cartasExibidas = cartasExibidas.filter(c => c.quantidade === 0);
+            } else if (abaAtual === 'repetidas') {
+                cartasExibidas = cartasExibidas.filter(c => c.quantidade > 1);
+            }
+
+            const grupos = new Map();
+            cartasExibidas.forEach((carta) => {
+                if (!grupos.has(carta.selecao)) grupos.set(carta.selecao, []);
+                grupos.get(carta.selecao).push(carta);
+            });
+
+            if (grupos.size === 0) {
+                container.innerHTML = `<div class="empty-message">Nenhuma carta encontrada nesta aba!</div>`;
+            } else {
+                for (const [nomeSelecao, cartasDaSelecao] of grupos.entries()) {
+                    const section = document.createElement('div');
+                    section.className = 'team-section';
+                    const title = document.createElement('h2');
+                    title.className = 'team-title';
+                    title.innerText = nomeSelecao;
+                    section.appendChild(title);
+
+                    const grid = document.createElement('div');
+                    grid.className = 'grid';
+
+                    cartasDaSelecao.forEach(carta => {
+                        const cardDiv = document.createElement('div');
+                        cardDiv.className = `card ${carta.quantidade === 0 ? 'missing' : ''} ${carta.quantidade > 1 ? 'duplicate' : ''}`;
+                        let badgeHtml = carta.quantidade > 1 ? `<div class="badge">+${carta.quantidade - 1}</div>` : '';
+
+                        cardDiv.innerHTML = `
+                            ${badgeHtml}
+                            <div class="card-code">${carta.codigo}</div>
+                            <div class="controls">
+                                <button onclick="updateSticker(${carta.indexOriginal}, -1)" class="btn-small">-</button>
+                                <span style="font-weight: bold; font-size: 16px;">${carta.quantidade}</span>
+                                <button onclick="updateSticker(${carta.indexOriginal}, 1)" class="btn-small">+</button>
+                            </div>
+                        `;
+                        grid.appendChild(cardDiv);
+                    });
+                    section.appendChild(grid);
+                    container.appendChild(section);
+                }
+            }
+
+            document.getElementById('total-collected').innerText = totalColetado;
+            document.getElementById('total-cards').innerText = cartas.length;
+            document.getElementById('total-duplicates').innerText = totalRepetidas;
+
+            localStorage.setItem('figuras26_save', JSON.stringify(cartas));
+        }
+
+        function updateSticker(index, valor) {
+            if (cartas[index].quantidade + valor >= 0) {
+                cartas[index].quantidade += valor;
+                renderizar();
+            }
+        }
+
+        // Inicia
+        iniciarNavegacao();
+        renderizar();
+    </script>
+</body>
+</html>
