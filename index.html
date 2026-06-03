@@ -213,8 +213,8 @@
 
         let cartasGeradas = [];
 
-        // Especiais (FWC) de 1 a 19
-        for(let i = 1; i <= 19; i++) {
+        // Especiais (FWC) de 1 a 20
+        for(let i = 1; i <= 20; i++) {
             cartasGeradas.push({ codigo: `FWC-${i}`, selecao: "Especiais 🌟", quantidade: 0 });
         }
 
@@ -230,8 +230,8 @@
             cartasGeradas.push({ codigo: `C-${i}`, selecao: "Coca-Cola 🥤", quantidade: 0 });
         }
 
-        // Carrega do LocalStorage (Nome novo para evitar bugs com os dados antigos)
-        let cartasSalvas = JSON.parse(localStorage.getItem('figuras26_oficial')) || [];
+        // Carrega do LocalStorage
+        let cartasSalvas = JSON.parse(localStorage.getItem('figuras26_vFinal')) || [];
         let dicionarioSalvas = {};
         cartasSalvas.forEach(carta => { dicionarioSalvas[carta.codigo] = carta.quantidade; });
 
@@ -372,7 +372,7 @@
             document.getElementById('total-cards').innerText = cartas.length;
             document.getElementById('total-duplicates').innerText = totalRepetidas;
 
-            localStorage.setItem('figuras26_oficial', JSON.stringify(cartas));
+            localStorage.setItem('figuras26_vFinal', JSON.stringify(cartas));
         }
 
         function updateSticker(index, valor) {
