@@ -213,28 +213,25 @@
 
         let cartasGeradas = [];
 
-        // Especiais (FWC) agora de 00 a 19
-        for(let i = 0; i <= 19; i++) {
-            let num = i < 10 ? `0${i}` : i;
-            cartasGeradas.push({ codigo: `FWC-${num}`, selecao: "Especiais 🌟", quantidade: 0 });
+        // Especiais (FWC) de 1 a 19
+        for(let i = 1; i <= 19; i++) {
+            cartasGeradas.push({ codigo: `FWC-${i}`, selecao: "Especiais 🌟", quantidade: 0 });
         }
 
-        // Resto das seleções (00 a 20)
+        // Resto das seleções de 1 a 20 (Sem o Zero)
         selecoesCopa2026.forEach((selecao) => {
-            for(let i = 0; i <= 20; i++) {
-                let numero = i < 10 ? `0${i}` : i; 
-                cartasGeradas.push({ codigo: `${selecao.sigla}-${numero}`, selecao: selecao.nome, quantidade: 0 });
+            for(let i = 1; i <= 20; i++) {
+                cartasGeradas.push({ codigo: `${selecao.sigla}-${i}`, selecao: selecao.nome, quantidade: 0 });
             }
         });
 
-        // Coca-Cola (C-01 a C-14) no final do álbum
+        // Coca-Cola (C-1 a C-14) no final do álbum
         for(let i = 1; i <= 14; i++) {
-            let num = i < 10 ? `0${i}` : i;
-            cartasGeradas.push({ codigo: `C-${num}`, selecao: "Coca-Cola 🥤", quantidade: 0 });
+            cartasGeradas.push({ codigo: `C-${i}`, selecao: "Coca-Cola 🥤", quantidade: 0 });
         }
 
-        // Carrega do LocalStorage
-        let cartasSalvas = JSON.parse(localStorage.getItem('figuras26_save')) || [];
+        // Carrega do LocalStorage (Nome novo para evitar bugs com os dados antigos)
+        let cartasSalvas = JSON.parse(localStorage.getItem('figuras26_oficial')) || [];
         let dicionarioSalvas = {};
         cartasSalvas.forEach(carta => { dicionarioSalvas[carta.codigo] = carta.quantidade; });
 
@@ -375,7 +372,7 @@
             document.getElementById('total-cards').innerText = cartas.length;
             document.getElementById('total-duplicates').innerText = totalRepetidas;
 
-            localStorage.setItem('figuras26_save', JSON.stringify(cartas));
+            localStorage.setItem('figuras26_oficial', JSON.stringify(cartas));
         }
 
         function updateSticker(index, valor) {
