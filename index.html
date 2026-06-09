@@ -64,6 +64,29 @@
             transition: width 0.5s ease-in-out;
         }
 
+        /* Barra de Pesquisa */
+        .search-container {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 20px;
+            padding: 0 10px;
+        }
+        #search-bar {
+            width: 100%;
+            max-width: 500px;
+            padding: 12px 20px;
+            border-radius: 25px;
+            border: 2px solid #ddd;
+            font-size: 16px;
+            outline: none;
+            transition: 0.3s;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+        #search-bar:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 8px rgba(0,77,153,0.2);
+        }
+
         /* Estilos das Abas */
         .tabs {
             display: flex;
@@ -183,6 +206,10 @@
         </div>
     </div>
 
+    <div class="search-container">
+        <input type="text" id="search-bar" placeholder="🔍 Pesquisar figurinha (ex: BRA-5, México...)" oninput="pesquisarCarta()">
+    </div>
+
     <div class="tabs">
         <button id="tab-todas" class="tab-btn active" onclick="mudarAba('todas')">Todas as Cartas</button>
         <button id="tab-faltantes" class="tab-btn" onclick="mudarAba('faltantes')">Faltantes</button>
@@ -197,194 +224,5 @@
 
     <script>
         const selecoesCopa2026 = [
-            { nome: "Grupo A - México 🇲🇽", sigla: "MEX" }, { nome: "Grupo A - África do Sul 🇿🇦", sigla: "RSA" }, { nome: "Grupo A - Coreia do Sul 🇰🇷", sigla: "KOR" }, { nome: "Grupo A - República Tcheca 🇨🇿", sigla: "CZE" },
-            { nome: "Grupo B - Canadá 🇨🇦", sigla: "CAN" }, { nome: "Grupo B - Bósnia 🇧🇦", sigla: "BIH" }, { nome: "Grupo B - Catar 🇶🇦", sigla: "QAT" }, { nome: "Grupo B - Suíça 🇨🇭", sigla: "SUI" },
-            { nome: "Grupo C - Brasil 🇧🇷", sigla: "BRA" }, { nome: "Grupo C - Marrocos 🇲🇦", sigla: "MAR" }, { nome: "Grupo C - Haiti 🇭🇹", sigla: "HAI" }, { nome: "Grupo C - Escócia 🏴󠁧󠁢󠁳󠁣󠁴󠁿", sigla: "SCO" },
-            { nome: "Grupo D - Estados Unidos 🇺🇸", sigla: "USA" }, { nome: "Grupo D - Paraguai 🇵🇾", sigla: "PAR" }, { nome: "Grupo D - Austrália 🇦🇺", sigla: "AUS" }, { nome: "Grupo D - Turquia 🇹🇷", sigla: "TUR" },
-            { nome: "Grupo E - Alemanha 🇩🇪", sigla: "GER" }, { nome: "Grupo E - Curaçao 🇨🇼", sigla: "CUW" }, { nome: "Grupo E - Costa do Marfim 🇨🇮", sigla: "CIV" }, { nome: "Grupo E - Equador 🇪🇨", sigla: "ECU" },
-            { nome: "Grupo F - Holanda 🇳🇱", sigla: "NED" }, { nome: "Grupo F - Japão 🇯🇵", sigla: "JPN" }, { nome: "Grupo F - Suécia 🇸🇪", sigla: "SWE" }, { nome: "Grupo F - Tunísia 🇹🇳", sigla: "TUN" },
-            { nome: "Grupo G - Bélgica 🇧🇪", sigla: "BEL" }, { nome: "Grupo G - Egito 🇪🇬", sigla: "EGY" }, { nome: "Grupo G - Irã 🇮🇷", sigla: "IRN" }, { nome: "Grupo G - Nova Zelândia 🇳🇿", sigla: "NZL" },
-            { nome: "Grupo H - Espanha 🇪🇸", sigla: "ESP" }, { nome: "Grupo H - Cabo Verde 🇨🇻", sigla: "CPV" }, { nome: "Grupo H - Arábia Saudita 🇸🇦", sigla: "KSA" }, { nome: "Grupo H - Uruguai 🇺🇾", sigla: "URU" },
-            { nome: "Grupo I - França 🇫🇷", sigla: "FRA" }, { nome: "Grupo I - Senegal 🇸🇳", sigla: "SEN" }, { nome: "Grupo I - Iraque 🇮🇶", sigla: "IRQ" }, { nome: "Grupo I - Noruega 🇳🇴", sigla: "NOR" },
-            { nome: "Grupo J - Argentina 🇦🇷", sigla: "ARG" }, { nome: "Grupo J - Argélia 🇩🇿", sigla: "ALG" }, { nome: "Grupo J - Áustria 🇦🇹", sigla: "AUT" }, { nome: "Grupo J - Jordânia 🇯🇴", sigla: "JOR" },
-            { nome: "Grupo K - Portugal 🇵🇹", sigla: "POR" }, { nome: "Grupo K - RD Congo 🇨🇩", sigla: "COD" }, { nome: "Grupo K - Uzbequistão 🇺🇿", sigla: "UZB" }, { nome: "Grupo K - Colômbia 🇨🇴", sigla: "COL" },
-            { nome: "Grupo L - Inglaterra 🏴󠁧󠁢󠁥󠁮󠁧󠁿", sigla: "ENG" }, { nome: "Grupo L - Croácia 🇭🇷", sigla: "CRO" }, { nome: "Grupo L - Gana 🇬🇭", sigla: "GHA" }, { nome: "Grupo L - Panamá 🇵🇦", sigla: "PAN" }
-        ];
-
-        let cartasGeradas = [];
-
-        // Especiais (FWC) de 1 a 20
-        for(let i = 1; i <= 20; i++) {
-            cartasGeradas.push({ codigo: `FWC-${i}`, selecao: "Especiais 🌟", quantidade: 0 });
-        }
-
-        // Resto das seleções de 1 a 20 (Sem o Zero)
-        selecoesCopa2026.forEach((selecao) => {
-            for(let i = 1; i <= 20; i++) {
-                cartasGeradas.push({ codigo: `${selecao.sigla}-${i}`, selecao: selecao.nome, quantidade: 0 });
-            }
-        });
-
-        // Coca-Cola (C-1 a C-14) no final do álbum
-        for(let i = 1; i <= 14; i++) {
-            cartasGeradas.push({ codigo: `C-${i}`, selecao: "Coca-Cola 🥤", quantidade: 0 });
-        }
-
-        // Carrega do LocalStorage
-        let cartasSalvas = JSON.parse(localStorage.getItem('figuras26_vFinal')) || [];
-        let dicionarioSalvas = {};
-        cartasSalvas.forEach(carta => { dicionarioSalvas[carta.codigo] = carta.quantidade; });
-
-        let cartas = cartasGeradas.map(carta => {
-            if (dicionarioSalvas[carta.codigo] !== undefined) { carta.quantidade = dicionarioSalvas[carta.codigo]; }
-            return carta;
-        });
-
-        let abaAtual = 'todas'; 
-
-        // Função que gera os botões de atalho
-        function iniciarNavegacao() {
-            const navContainer = document.getElementById('quick-nav');
-            navContainer.innerHTML = ''; 
-
-            // Botão FWC
-            let btnFWC = document.createElement('button');
-            btnFWC.className = 'nav-btn';
-            btnFWC.innerText = '🌟 FWC';
-            btnFWC.onclick = () => rolarParaSelecao('Especiais 🌟');
-            navContainer.appendChild(btnFWC);
-
-            // Botões das Seleções
-            selecoesCopa2026.forEach(s => {
-                let btn = document.createElement('button');
-                btn.className = 'nav-btn';
-                btn.innerText = s.sigla; 
-                btn.onclick = () => rolarParaSelecao(s.nome);
-                navContainer.appendChild(btn);
-            });
-
-            // Botão Coca-Cola
-            let btnCoca = document.createElement('button');
-            btnCoca.className = 'nav-btn';
-            btnCoca.innerText = '🥤 COCA';
-            btnCoca.onclick = () => rolarParaSelecao('Coca-Cola 🥤');
-            navContainer.appendChild(btnCoca);
-        }
-
-        // Função do "elevador"
-        function rolarParaSelecao(nomeDaSelecao) {
-            if(abaAtual !== 'todas') {
-                mudarAba('todas');
-            }
-
-            setTimeout(() => {
-                const titulos = document.querySelectorAll('.team-title');
-                for(let titulo of titulos) {
-                    if(titulo.innerText === nomeDaSelecao) {
-                        const yOffset = -90; 
-                        const elementPosition = titulo.getBoundingClientRect().top;
-                        const offsetPosition = elementPosition + window.pageYOffset + yOffset;
-  
-                        window.scrollTo({
-                            top: offsetPosition,
-                            behavior: "smooth"
-                        });
-                        break;
-                    }
-                }
-            }, 50);
-        }
-
-        function mudarAba(aba) {
-            abaAtual = aba;
-            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
-            document.getElementById(`tab-${aba}`).classList.add('active');
-            renderizar();
-        }
-
-        function renderizar() {
-            const container = document.getElementById('album-container');
-            container.innerHTML = ''; 
-
-            let totalColetado = 0;
-            let totalRepetidas = 0;
-            
-            cartas.forEach(carta => {
-                if (carta.quantidade > 0) totalColetado++;
-                if (carta.quantidade > 1) totalRepetidas += (carta.quantidade - 1);
-            });
-
-            // Atualiza barra de progresso
-            let porcentagem = ((totalColetado / cartas.length) * 100).toFixed(1);
-            document.getElementById('percentage-text').innerText = porcentagem + '%';
-            document.getElementById('progress-fill').style.width = porcentagem + '%';
-
-            let cartasExibidas = cartas.map((carta, index) => ({ ...carta, indexOriginal: index }));
-            
-            if (abaAtual === 'faltantes') {
-                cartasExibidas = cartasExibidas.filter(c => c.quantidade === 0);
-            } else if (abaAtual === 'repetidas') {
-                cartasExibidas = cartasExibidas.filter(c => c.quantidade > 1);
-            }
-
-            const grupos = new Map();
-            cartasExibidas.forEach((carta) => {
-                if (!grupos.has(carta.selecao)) grupos.set(carta.selecao, []);
-                grupos.get(carta.selecao).push(carta);
-            });
-
-            if (grupos.size === 0) {
-                container.innerHTML = `<div class="empty-message">Nenhuma carta encontrada nesta aba!</div>`;
-            } else {
-                for (const [nomeSelecao, cartasDaSelecao] of grupos.entries()) {
-                    const section = document.createElement('div');
-                    section.className = 'team-section';
-                    const title = document.createElement('h2');
-                    title.className = 'team-title';
-                    title.innerText = nomeSelecao;
-                    section.appendChild(title);
-
-                    const grid = document.createElement('div');
-                    grid.className = 'grid';
-
-                    cartasDaSelecao.forEach(carta => {
-                        const cardDiv = document.createElement('div');
-                        cardDiv.className = `card ${carta.quantidade === 0 ? 'missing' : ''} ${carta.quantidade > 1 ? 'duplicate' : ''}`;
-                        let badgeHtml = carta.quantidade > 1 ? `<div class="badge">+${carta.quantidade - 1}</div>` : '';
-
-                        cardDiv.innerHTML = `
-                            ${badgeHtml}
-                            <div class="card-code">${carta.codigo}</div>
-                            <div class="controls">
-                                <button onclick="updateSticker(${carta.indexOriginal}, -1)" class="btn-small">-</button>
-                                <span style="font-weight: bold; font-size: 16px;">${carta.quantidade}</span>
-                                <button onclick="updateSticker(${carta.indexOriginal}, 1)" class="btn-small">+</button>
-                            </div>
-                        `;
-                        grid.appendChild(cardDiv);
-                    });
-                    section.appendChild(grid);
-                    container.appendChild(section);
-                }
-            }
-
-            document.getElementById('total-collected').innerText = totalColetado;
-            document.getElementById('total-cards').innerText = cartas.length;
-            document.getElementById('total-duplicates').innerText = totalRepetidas;
-
-            localStorage.setItem('figuras26_vFinal', JSON.stringify(cartas));
-        }
-
-        function updateSticker(index, valor) {
-            if (cartas[index].quantidade + valor >= 0) {
-                cartas[index].quantidade += valor;
-                renderizar();
-            }
-        }
-
-        // Inicia
-        iniciarNavegacao();
-        renderizar();
-    </script>
-</body>
-</html>
+            { nome: "Grupo A - México 🇲🇽", sigla: "MEX" }, { nome: "Grupo A - África do Sul 🇿🇦", sigla: "RSA" }, { nome:
+                
